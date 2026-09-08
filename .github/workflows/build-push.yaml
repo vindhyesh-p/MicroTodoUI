@@ -44,18 +44,18 @@ jobs:
         run: |
           docker build -t $IMAGE_NAME:$IMAGE_TAG .
 
+      - name: Scan Docker Image with Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: '${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}'
+          format: table
+          exit-code: '1'
+          ignore-unfixed: true
+          severity: 'CRITICAL,HIGH'
+
       - name: Tag Docker Image for ACR
         run: |
           docker tag $IMAGE_NAME:$IMAGE_TAG $ACR_LOGIN_SERVER/$IMAGE_NAME:$IMAGE_TAG
-
-      - name: Scan Docker Image with Trivy 
-        uses: aquasecurity/trivy-action@master 
-        with: 
-          image-ref: '${{ env.ACR_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}' 
-          format: table 
-          exit-code: '1' 
-          ignore-unfixed: true 
-          severity: 'CRITICAL,HIGH'
 
       - name: Push Docker Image to ACR
         run: |
