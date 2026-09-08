@@ -15,8 +15,8 @@ RUN npm run build
 # Stage 2: Production image
 FROM nginx:alpine
 
-# Update Alpine packages to latest security fixes
-RUN apk upgrade --no-cache
+# Update Alpine packages with latest security fixes
+RUN apk update && apk upgrade --no-cache
 
 COPY --from=build /app/build /usr/share/nginx/html
 
